@@ -75,7 +75,7 @@ class DBQuery extends DBAccess {
     }
     
     //UPDATE
-    public function updateTransaction($response, $response_time, $id, $reference_id) {
+    public function updateTransaction($response, $response_time, $id) {
         $stmt = $this->pdo->prepare('UPDATE log_tango 
                                      SET 
                                      response = :response,
