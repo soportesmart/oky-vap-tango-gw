@@ -17,51 +17,84 @@ class TangoServiceBR {
         $this->tango_auth = $tango_auth;
     }
 
-    private function sendRequestTango(string $url, array $bodyData = []): array {
+    private function sendRequestTango(string $url, array $bodyData = []): array
+    {
+        // Validar campos mínimos
+        foreach (['externalRefID','amount','utid','purchaseOrderNumber'] as $k) {
+            if (!array_key_exists($k, $bodyData)) {
+                return [
+                    'success' => false,
+                    'error'   => "Falta el campo requerido: {$k}",
+                    'status'  => null,
+                ];
+            }
+        }
+
+        // Armar payload
+        $data = [
+            'externalRefID'       => $bodyData['externalRefID'],
+            'amount'              => $bodyData['amount'],
+            'utid'                => $bodyData['utid'],
+            'sendEmail'           => false,
+            'purchaseOrderNumber' => $bodyData['purchaseOrderNumber'],
+            'accountIdentifier'   => $this->tango_auth->accountIdentifierTango,
+            'customerIdentifier'  => $this->tango_auth->customerIdentifierTango,
+        ];
+
+        // Inicializar cURL
+        $ch = curl_init($url);
+        if ($ch === false) {
+            return ['success' => false, 'error' => 'No se pudo inicializar cURL', 'status' => null];
+        }
+
         $basicAuth  = base64_encode($this->tango_auth->userNameTango . ':' . $this->tango_auth->passwordTango);
+        $authHeader = 'Authorization: Basic ' . $basicAuth;
 
-        $data['externalRefID'] = $bodyData['externalRefID'];
-        $data['amount'] = $bodyData['amount'];
-        $data['utid'] = $bodyData['utid'];
-        $data['sendEmail'] = false;
-        $data['purchaseOrderNumber'] = $bodyData['purchaseOrderNumber'];
-        $data['accountIdentifier'] = $this->tango_auth->accountIdentifierTango;
-        $data['customerIdentifier'] = $this->tango_auth->customerIdentifierTango;
-
-        // Preparar headers
+        // Opciones
         curl_setopt_array($ch, [
-            CURLOPT_POST            => true,
-            CURLOPT_RETURNTRANSFER  => true,
-            CURLOPT_HTTPHEADER      => [
+            CURLOPT_POST           => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 30,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_HTTPHEADER     => [
                 'Accept: application/json',
                 'Content-Type: application/json',
-                'Authorization: Basic ' . $basicAuth,
+                $authHeader,
             ],
-            CURLOPT_POSTFIELDS      => json_encode($data, JSON_UNESCAPED_UNICODE),
+            CURLOPT_POSTFIELDS     => json_encode($data, JSON_UNESCAPED_UNICODE),
+            // Autenticación Basic (recomendado en lugar del header manual):
+            //CURLOPT_HTTPAUTH       => CURLAUTH_BASIC,
+            //CURLOPT_USERPWD        => $this->tango_auth->userNameTango . ':' . $this->tango_auth->passwordTango,
         ]);
 
         // Ejecutar
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-        if (curl_errno($ch)) {
+        if ($response === false) {
             $error = curl_error($ch);
             curl_close($ch);
             return [
                 'success' => false,
-                'error' => $error,
-                'status' => $httpCode
+                'error'   => $error,
+                'status'  => $httpCode ?: 0,
             ];
         }
 
         curl_close($ch);
 
+        $decoded = null;
+        if ($response !== '' && $response !== null) {
+            $decoded = json_decode($response, true);
+        }
+
         return [
-            'success' => $httpCode >= 200 && $httpCode < 300,
-            'response' => json_decode($response, true),
-            'status' => $httpCode
+            'success'  => ($httpCode >= 200 && $httpCode < 300),
+            'response' => $decoded ?? $response, // por si no es JSON
+            'status'   => $httpCode,
         ];
     }
+
     
     public function createOrder($body) {
         $this->logger->info("TangoServiceBR.createOrder: Entering... ");
