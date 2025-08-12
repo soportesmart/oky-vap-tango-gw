@@ -241,7 +241,7 @@ class TangoServiceBR {
         $code = self::uuidV4();
 
         // 6) Guardar en BD
-        $this->dbquery->insertCodeGiftcard($purchaseId, $code, $fulfilment_flag, json_encode($transformedData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+        $this->dbquery->insertCodeGiftcard($purchaseId, $code, $fulfilment_flag, json_encode($transformedData));
 
         // 7) Retornar algo útil
        /*  return [
