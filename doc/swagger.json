@@ -1,0 +1,231 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is OKY Cellpay Gateway API reference guide for fraud validation services. You will find all services related and the appropiate guide to use them. You can find more about Oky at [https://www.oky.app](https://www.oky.app)",
+    "version": "1.0.0",
+    "title": "OKY Cellpay Gateway API",
+    "termsOfService": "https://okyapp.com/terms.php",
+    "contact": {
+      "email": "soporte@oky.app"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "apiqa.oky.app",
+  "basePath": "/oky-cellpay-gw/control-service/index.php/",
+  "tags": [
+  ],
+  "schemes": [
+    "https://apidemo.oky.app/oky-vap-cellpay-gw/control-service/index.php/"
+  ],
+  "paths": {
+    "/vouchers/buytime": {
+      "post": {
+        "tags": [
+          "buytime"
+        ],
+        "summary": "Buy phone time from Cellpay.",
+        "description": "Create an order to buy air time from Cellpay",
+        "operationId": "buytime",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Buy phone time from Cellpay.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BuyTime"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/BuyTimeResponse"
+            }
+          },
+          "403": {
+            "description": "Failed transaction"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": [
+              "write:validate"
+            ]
+          }
+        ]
+      }
+    },
+    "/vouchers/check": {
+      "post": {
+        "tags": [
+          "check"
+        ],
+        "summary": "Check operation result.",
+        "description": "Check the order status from a Cellpay operation.",
+        "operationId": "check",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Check operation result.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Check"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/CheckResponse"
+            }
+          },
+          "403": {
+            "description": "Failed transaction"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": [
+              "write:validate"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "ApiKeyAuth": {
+      "type": "apiKey",
+      "name": "token",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "BuyTime": {
+      "type": "object",
+      "required": [
+        "phone",
+        "carrierId",
+        "planId",
+        "amount",
+        "referenceId",
+        "source",
+        "transactionId",
+        "productId"
+      ],
+      "properties": {
+        "number": {
+          "type": "string",
+          "example": "9876543211",
+          "description": "Phone number to receive the buy."
+        },
+        "carrierId": {
+          "type": "string",
+          "example": "38",
+          "description": "Id from Cellpay carrier."
+        },
+        "planId": {
+          "type": "string",
+          "example": "33333",
+          "description": "Id from Cellpay plan."
+        },
+        "amount": {
+          "type": "string",
+          "example": "30",
+          "description": "amount to buy."
+        },
+        "referenceId": {
+          "type": "string",
+          "example": "2",
+          "description": "Internal Id from OKY system."
+        },
+        "source": {
+          "type": "string",
+          "example": "1",
+          "description": "source of request. 1 = OKY, 2 = POS system"
+        },
+        "transactionId": {
+          "type": "string",
+          "example": "77",
+          "description": "Transaction Id."
+        },
+        "productId": {
+          "type": "string",
+          "example": "123",
+          "description": "Giftcard Id."
+        }
+      }
+    },
+    "Check": {
+      "type": "object",
+      "required": [
+        "idTransactions"
+      ],
+      "properties": {
+        "idTransactions": {
+          "type": "string",
+          "example": "14938500",
+          "description": "Reference number from Cellpay"
+        }
+      }
+    },
+    "BuyTimeResponse": {
+      "type": "object",
+      "properties": {
+        "operationResult": {
+          "type": "string",
+          "example": "success",
+          "description": "Returns true if the operation was successful or not."
+        },
+        "message": {
+          "type": "string",
+          "example": "Transaction approved.",
+          "description": "Returns a message about the operation result."
+        },
+        "data": {
+          "type": "array",
+          "example": "{'ConfirmationCode': '312854453','CCTransactionId': '14938537','reference_id': '2'}",
+          "description": "Returns an array with information from Cellpay."
+        }
+      }
+    },
+    "CheckResponse": {
+      "type": "object",
+      "properties": {
+        "operationResult": {
+          "type": "string",
+          "example": "success",
+          "description": "Returns true if the operation was successful or not."
+        },
+        "message": {
+          "type": "string",
+          "example": "Transaction approved.",
+          "description": "Returns a message about the operation result."
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}

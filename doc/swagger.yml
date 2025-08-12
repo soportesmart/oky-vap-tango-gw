@@ -1,0 +1,205 @@
+openapi: 3.0.0
+info:
+  description: This is OKY Risk Gateway API reference guide for fraud validation services.
+    You will find all services related and the appropiate guide to use them. You
+    can find more about Oky at [https://www.oky.app](https://www.oky.app)
+  version: 1.0.0
+  title: OKY Cellpay Gateway API
+  termsOfService: https://okyapp.com/terms.php
+  contact:
+    email: soporte@oky.app
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+tags:
+  - name: validate
+    description: Validate a phone number.
+    externalDocs:
+      description: Find out more
+      url: https://www.okyapp.com
+  - name: transactions
+    description: Cellpay validation transactions.
+    externalDocs:
+      description: Find out more
+      url: https://www.okyapp.com
+paths:
+  /v1/validate:
+    post:
+      tags:
+        - validate
+      summary: Validate if a phone number is correct.
+      description: Number validation is the process in which the system confirms if an
+        entered phone number is correct and will ensure a better user
+        experience.
+      operationId: validate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Validate"
+        description: Validate a phone number entered.
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidateResponse"
+        "403":
+          description: Failed transaction
+      security:
+        - ApiKeyAuth:
+            - write:validate
+  /transactions/accumulated:
+    post:
+      tags:
+        - transactions
+      summary: Validate the risk on an accumulated amount transaction.
+      description: Validate the risk score for an account based on the accumulated recharged amount according to rules established on Oky's system.
+      operationId: accumulated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Accumulated"
+        description: Validate the risk score on an account.
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccumulatedResponse"
+        "403":
+          description: Failed transaction
+      security:
+        - ApiKeyAuth:
+            - write:validate
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: https://apimaster.oky.app/oky-risk-gw/control-service
+    description: Production Server
+  - url: https://apidemo.oky.app/oky-risk-gw/control-service
+    description: Staging Server
+  - url: https://apiqa.oky.app/oky-risk-gw/control-service
+    description: Development Server
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: token
+      in: header
+  schemas:
+    Validate:
+      type: object
+      required:
+        - number
+      properties:
+        number:
+          type: string
+          example: "50230309500"
+          description: Phone number to validate with country code
+    ValidateResponse:
+      type: object
+      properties:
+        valid:
+          type: boolean
+          example: true
+          description: Returns true if the specified phone number is valid.
+        number:
+          type: string
+          example: "50234556944"
+          description: Returns the phone number you specified in a clean format. (stripped
+            of any special characters)
+        local_format:
+          type: string
+          example: "34556944"
+          description: Returns the local (national) format of the specified phone number.
+        international_format:
+          type: string
+          example: "+50230381139"
+          description: Returns the international format of the specified phone number.
+        country_prefix:
+          type: string
+          example: "+502"
+          description: Returns the international country dial prefix for the specified
+            phone number.
+        country_code:
+          type: string
+          example: GT
+          description: Returns the 2-letter country code assigned to the specified phone
+            number.
+        country_name:
+          type: string
+          example: Guatemala (Republic of)
+          description: Returns the full country name assigned to the specified phone number.
+        location:
+          type: string
+          example: ""
+          description: If available, returns the location (city, state, or county) assigned
+            to the specified phone number.
+        carrier:
+          type: string
+          example: Comunicaciones Celulares SA (COMCEL)
+          description: Returns the name of the carrier which the specified phone number is
+            registered with.
+        line_type:
+          type: string
+          example: mobile
+          description: "Returns the line type of the specified phone number. Possible
+            values
+            (mobile|landline|special_services|toll_free|premium_rate|satellite|\
+            paging) "
+    Accumulated:
+      type: object
+      required:
+        - accountId
+        - amount
+        - serviceType
+        - branchId
+        - username
+      properties:
+        accountId:
+          type: string
+          example: "90"
+          description: The customer account id number.
+        amount:
+          type: string
+          example: "10"
+          description: Amount to be credited to the Sender’s account being validated
+        serviceType:
+          type: string
+          example: "topup"
+          description: The type of service being reviewed
+        branchId:
+          type: string
+          example: "1"
+          description: ID of the retailer’s branch
+        username:
+          type: string
+          example: venta@merkdo.com
+          description: Username inside the retailer users scheme that made the top up
+    AccumulatedResponse:
+      type: object
+      properties:
+        risk:
+          type: string
+          example: "High"
+          description: The risk result on the account being reviewed. Risk response could be (No Risk, Low, Medium, High, Blocked)
+        score:
+          type: string
+          example: "75"
+          description: The score result on the account being reviewed. Score response could be (0, 25, 50, 75, 100) 
+        operationResult:
+          type: string
+          example: Ok
+          description: The result outcome of the transaction
+        message:
+          type: string
+          example: Ok
+          description: Message explaining the transaction result
+         
