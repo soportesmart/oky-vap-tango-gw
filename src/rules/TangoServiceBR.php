@@ -170,12 +170,7 @@ class TangoServiceBR {
         return $response;
     }
 
-    private function transformMapping(
-        array $dataResponse,
-        $idGiftcard,
-        $response_time,
-        $purchaseId = null
-    ): array {
+    private function transformMapping( array $dataResponse, $idGiftcard, $response_time, $purchaseId = null) {
         // 1) Tomar lista de credenciales de la respuesta
         $credentialList = $dataResponse['reward']['credentialList'] ?? [];
         if (!is_array($credentialList)) {
