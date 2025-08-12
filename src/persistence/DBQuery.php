@@ -80,7 +80,7 @@ class DBQuery extends DBAccess {
                                      SET 
                                      response = :response,
                                      time_elapsed = :response_time
-                                     WHERE id = :id');
+                                     WHERE id_log = :id');
         $stmt->bindParam("response", $response);
         $stmt->bindParam("response_time", $response_time);
         $stmt->bindParam("id", $id);
