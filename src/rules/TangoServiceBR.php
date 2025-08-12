@@ -140,21 +140,19 @@ class TangoServiceBR {
         }
 
         // Respuesta exitosa
-        if ($result['status'] == 200) {
+        if ($result['status'] == 200 || $result['status'] == 201) {
             transformMapping ($dataResponse, $data->productId, $response_time);
 
             $response->operationResult = "success";
             $response->message = "Transaction approved.";
             $response->data = [
                 'referenceOrderID' => $result['response']['referenceOrderID'],
-                'amountCharged' => $result['response']['amountCharged'],
+                'amountCharged' => $result['response']['amountCharged']['value'],
                 'externalRefID' => $result['response']['externalRefID']
             ];
             return $response;
-        }
-
-        // Respuesta de error de Tango
-        if ($result['status'] != 200) {
+        }else {
+            // Respuesta de error de Tango
             $response->operationResult = "error";
             $response->message = $result['response']['message'] ?? 'Unknown error';
             $response->data = [
