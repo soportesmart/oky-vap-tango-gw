@@ -141,8 +141,8 @@ class TangoServiceBR {
 
         // Respuesta exitosa
         if ($result['status'] == 200 || $result['status'] == 201) {
-            $dataResponse = $result['response']['reward']['credentialList'];
-            $this->transformMapping ($dataResponse, $data->productId, $response_time);
+            $dataResponse = $result['response'];
+            $this->transformMapping ($dataResponse, $data->productId, $response_time, $data->transactionId);
 
             $response->operationResult = "success";
             $response->message = "Transaction approved.";
@@ -170,7 +170,7 @@ class TangoServiceBR {
         return $response;
     }
 
-    private function transformMapping( array $dataResponse, $idGiftcard, $response_time, $purchaseId = null) {
+    private function transformMapping( array $dataResponse, $idGiftcard, $response_time, $purchaseId) {
         // 1) Tomar lista de credenciales de la respuesta
         $credentialList = $dataResponse['reward']['credentialList'] ?? [];
         if (!is_array($credentialList)) {

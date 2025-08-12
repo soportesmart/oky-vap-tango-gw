@@ -71,7 +71,7 @@ class DBQuery extends DBAccess {
                                      FROM cat_esp_giftcard
                                      WHERE id_giftcard = :id_giftcard');
         $stmt->bindParam("id_giftcard", $id_giftcard);
-        return $this->getResult($stmt)->field_mapping;
+        return $this->getResult($stmt)->fulfilment_flag;
     }
     
     //UPDATE
