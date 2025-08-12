@@ -5,7 +5,7 @@ RewriteEngine On
 # absolute physical path to the directory that contains this htaccess file.
 #
 # RewriteBase /
-RewriteBase /oky-tango-gw/control-service
+RewriteBase /oky-vap-tango-gw/control-service
 
 Header add Access-Control-Allow-Origin "*"
 Header add Access-Control-Allow-Headers "origin, x-requested-with, content-type"
