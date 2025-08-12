@@ -86,19 +86,6 @@ class DBQuery extends DBAccess {
         $stmt->bindParam("id", $id);
         return $this->update($stmt);
     }
-
-    //$this->dbquery->updateCodeGiftcard($purchaseId, $code, $fulfilment_flag, json_encode($transformedData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-    public function updateCodeGiftcard($id_transacciones, $code, $response_time, $id, $response) {
-        $stmt = $this->pdo->prepare('UPDATE tb_redemption_code 
-                                     SET 
-                                     response = :response,
-                                     time_elapsed = :response_time
-                                     WHERE id = :id');
-        $stmt->bindParam("response", $response);
-        $stmt->bindParam("response_time", $response_time);
-        $stmt->bindParam("id", $id);
-        return $this->update($stmt);
-    }
     
     //DELETE
     public function deleteRetailerInvoice($invoiceId) {
