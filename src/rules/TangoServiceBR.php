@@ -141,6 +141,7 @@ class TangoServiceBR {
 
         // Respuesta exitosa
         if ($result['status'] == 200 || $result['status'] == 201) {
+            $dataResponse = $result['response']['reward']['credentialList'];
             $this->transformMapping ($dataResponse, $data->productId, $response_time);
 
             $response->operationResult = "success";
