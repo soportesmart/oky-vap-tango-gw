@@ -48,9 +48,7 @@ class TangoServiceBR {
         }
 
         $basicAuth  = base64_encode($this->tango_auth->userNameTango . ':' . $this->tango_auth->passwordTango);
-        //$authHeader = 'Authorization: Basic ' . $basicAuth;
-        $authHeader = 'Authorization: Basic T0tZQXBwLVRFU1Q6RVdXeCRDSEBNTFFWQm1heW1ATnlRbkZ5anVSSnljT2NvY0t6b3BJanZqUA==';
-        //Basic T0tZQXBwLVRFU1Q6RVdXeCRDSEBNTFFWQm1heW1ATnlRbkZ5anVSSnljT2NvY0t6b3BJanZqUA==
+        $authHeader = 'Authorization: Basic ' . $basicAuth;
         // Opciones
         curl_setopt_array($ch, [
             CURLOPT_POST           => true,
