@@ -47,7 +47,7 @@ class DBQuery extends DBAccess {
             $stmt->bindParam(':id_transacciones', $id_transacciones);
             $stmt->bindParam(':internal_code', $code);
             $stmt->bindParam(':fulfillment_flag', $fulfillment_flag);
-            $stmt->bindParam(':redemption_code', json_encode($response));
+            $stmt->bindParam(':redemption_code', $response);
 
             $stmt->execute();
             return $this->pdo->lastInsertId();
