@@ -6,6 +6,7 @@ class CurlClient {
     private $ch;
     private $response;
     private $httpStatusCode;
+    private $logger;
 	
     public function __construct($logger) {
         $this->logger = $logger;
@@ -83,4 +84,3 @@ class CurlClient {
 	return $this->ch;
     }
 }
-

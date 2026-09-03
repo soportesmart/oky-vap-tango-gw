@@ -8,7 +8,14 @@ namespace BusinessRules;
  */
 abstract class ApiResponse {
     public $operationResult = '';
+    public $errorCode = '';
     public $message = '';  
+    public $timestamp;
+    public $data;
+
+    public function __construct() {
+        unset($this->errorCode, $this->timestamp, $this->data);
+    }
 }
 
 class GenericResponse extends ApiResponse {  

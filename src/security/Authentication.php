@@ -14,6 +14,9 @@ namespace Security;
  * @author hgmena
  */
 class Authentication {
+
+    private $dbapisecurity;
+    private $logger;
     
     public function __construct($dbapisecurity, $logger) {
         $this->dbapisecurity = $dbapisecurity;

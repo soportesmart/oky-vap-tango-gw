@@ -15,7 +15,7 @@ session_start();
 
 // Instantiate the app
 //$settings = require __DIR__ . '/../src/settings.php';
-$host = $_SERVER['HTTP_HOST'];
+$host = $_SERVER['HTTP_HOST'] ?? '';
 error_log('index.host : -->' . $host . '<--');
 switch ($host) {
     case 'apimaster.oky.app':

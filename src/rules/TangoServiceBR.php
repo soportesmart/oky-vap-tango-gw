@@ -8,11 +8,17 @@ use Twilio\Exceptions\RestException;
  * @author jperez
  */
 class TangoServiceBR {
+
+    private $dbquery;
+    private $logger;
+    private $curl;
+    private $tango_auth;
+    private $numverify;
     
     public function __construct($dbquery, $logger, $curl, $tango_auth) {
         $this->dbquery = $dbquery;
 	    $this->logger = $logger;
-        $this->numverify = $numverify;
+        $this->numverify = null;
         $this->curl = $curl;
         $this->tango_auth = $tango_auth;
     }
