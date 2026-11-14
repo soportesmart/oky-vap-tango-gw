@@ -19,14 +19,13 @@ session_start();
 $host = $_SERVER['HTTP_HOST'] ?? '';
 error_log('index.host : -->' . $host . '<--');
 switch ($host) {
-    case 'apimaster.oky.app':
+    case 'api-master.oky.app':
         $settings = require __DIR__ . '/../app/settings-prod.php';
         break;
-    case 'apidemo.oky.app':
+    case 'api-demo.oky.app':
         $settings = require __DIR__ . '/../app/settings-demo.php';
         break;
-    case 'apiqa.oky.app':
-        //error_log("QA : -->" . $host . "<--");
+    case 'api-qa.oky.app':
         $settings = require __DIR__ . '/../app/settings-qa.php';
         break;
     default:
