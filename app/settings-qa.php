@@ -39,6 +39,10 @@ return [
         ],
 
        	//Twilio Settings
+	'twilio_auth' => [
+       	    'api_sid' => 'ACbfc10ac3afd5f81325349440939f90f3',
+            'api_secret' => '0d00da0f92283ec218127b282d51aa47'
+        ],
 
 	//Tango Settings
         'tango_auth' => [
